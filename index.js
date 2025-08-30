@@ -139,8 +139,12 @@ async function startBrowser() {
   });
 
   page = await browser.newPage();
-  await page.goto(WS4KP_URL, { waitUntil: 'networkidle2', timeout: 30000 });
-
+  if (WS4KP_URLPARAMS){
+	  theURL = `$WS4KP_URL?$WS4KP_URLPARAMS`
+    await page.goto(
+  else {
+    await page.goto(WS4KP_URL, { waitUntil: 'networkidle2', timeout: 30000 });
+  }
   try {
     const zipInput = await page.waitForSelector('input[placeholder="Zip or City, State"], input', { timeout: 5000 });
     if (zipInput) {
