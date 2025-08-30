@@ -13,6 +13,7 @@ const WS4KP_HOST = process.env.WS4KP_HOST || 'localhost';
 const WS4KP_PORT = process.env.WS4KP_PORT || '8080';
 const STREAM_PORT = process.env.STREAM_PORT || '9798';
 const WS4KP_URL = `http://${WS4KP_HOST}:${WS4KP_PORT}`;
+const WS4KP_URLPARAMS = process.env.WS4KP_URLPARAMS || '';
 const HLS_SETUP_DELAY = 2000;
 const FRAME_RATE = process.env.FRAME_RATE || 10;
 
@@ -141,7 +142,7 @@ async function startBrowser() {
   page = await browser.newPage();
   if (WS4KP_URLPARAMS){
 	  theURL = `$WS4KP_URL?$WS4KP_URLPARAMS`
-    await page.goto(
+    await page.goto(theURL, { waitUntil: 'networkidle2', timeout: 30000 });
   else {
     await page.goto(WS4KP_URL, { waitUntil: 'networkidle2', timeout: 30000 });
   }
@@ -157,6 +158,7 @@ async function startBrowser() {
       else await zipInput.press('Enter');
       await page.waitForSelector('div.weather-display, #weather-content', { timeout: 30000 });
     }
+    else if (WS4KP_URLPARAMS){await page.waitForSelector('div.weather-display, #weather-content', { timeout: 30000 });}
   } catch {}
 
   await page.setViewport({ width: 1280, height: 720 });
